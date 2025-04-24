@@ -9,7 +9,7 @@ namespace DAL.Data.Repositries.Interfacies
 {
     public interface IDepartmentRepository
     {
-        IEnumerable<Department> GetAll(bool WhithTracking);
+        IEnumerable<Department> GetAll(bool WhithTracking=false);
         Department GetById(int id);
         int Update(Department Entity);
         int Delete(Department Entity);

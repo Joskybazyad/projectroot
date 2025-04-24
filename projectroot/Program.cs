@@ -1,4 +1,7 @@
+using BLL.Services;
 using DAL.Data;
+using DAL.Data.Repositries.Classes;
+using DAL.Data.Repositries.Interfacies;
 using Microsoft.EntityFrameworkCore;
 
 namespace projectroot
@@ -10,12 +13,14 @@ namespace projectroot
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
             //builder.Services.AddScoped<AppDBContext>(); // Allow DI For AppDBcontext
             builder.Services.AddDbContext<AppDBContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             }); 
+            builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>();
+            builder.Services.AddScoped<IDepartmentService,DepartmentService>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

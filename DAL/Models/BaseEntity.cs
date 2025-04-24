@@ -10,9 +10,9 @@ namespace DAL.Models
     {
         public int ID { get; set; } //Pk
         public int CreatedBy { get; set; } // User ID
-        public DateTime CreatedOn { get; set; } // Time Of Creation
+        public DateTime? CreatedOn { get; set; } // Time Of Creation
         public int LastModifiedBy { get; set; } // User ID
-        public DateTime LastModifiedOn { get; set; } // Time Of Creation Automaticaly calculated
+        public DateTime? LastModifiedOn { get; set; } // Time Of Creation Automaticaly calculated
         public bool IsDeleted { get; set; }
     }
 }
