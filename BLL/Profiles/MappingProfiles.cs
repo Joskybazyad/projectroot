@@ -21,7 +21,7 @@ namespace BLL.Profiles
                 .ForMember(dest => dest.EmployeeType, options => options.MapFrom(src => src.EmployeeType))
                 .ForMember(dest => dest.HiringDate, options => options.MapFrom(src => DateOnly.FromDateTime(src.HiringDate)));
             CreateMap<CreatedEmployeeDto, Employee>().ForMember(dest => dest.HiringDate, options => options.MapFrom(src => src.HiringDate.ToDateTime(TimeOnly.MinValue)));
-            CreateMap<UpdatedEmployeeDto, Employee>();
+            CreateMap<UpdatedEmployeeDto, Employee>().ForMember(dest => dest.HiringDate, options => options.MapFrom(src => src.HiringDate.ToDateTime(TimeOnly.MinValue)));
         }
     }
 }

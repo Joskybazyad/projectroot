@@ -2,11 +2,32 @@
 @{
     ViewData["Title"] = "Index";
 }
+@* <div class="alert alert-warning">
+    @ViewData["Massage"]
+</div>
+<div class="alert alert-success">
+    @ViewBag.Massage
+</div> *@
+@if (!string.IsNullOrEmpty(@TempData["Massage"]as string))
+{
+    <div aria-live="polite" aria-atomic="true" class="toast-container position-fixed p-3" style="bottom: 25px; right:25px; z-index: 100;">
+        <div class="toast fade show " role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto text-success">Success!!</strong>
+                <small>Just now</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                @TempData["Massage"]
+            </div>
+        </div>
+    </div>
+}
 
 <h1>All Employees</h1>
 <br />
 <br />
-<a class="btn btn-primary" asp-controller="Employees" asp-action="Create">Create Employee</a>
+<a class="btn btn-primary" asp-controller="Employee" asp-action="Create">Create Employee</a>
 <br />
 @if (Model.Any())
 {
@@ -39,8 +60,9 @@
                         <i class="fa @(employee.IsActive?"fa-solid fa-circle-check text-success":"fa-solid fa-circle-xmark text-danger")"></i>
                     </td>
                     <td>@employee.Gender</td>
-
-                    <td>
+                    @* @Html.PartialAsync("_ButtonPartialView") *@
+                    <partial name="_ButtonsPartialView" model="employee.Id" />
+                    @* <td>
                         <a class="btn btn-primary" asp-action="Details" asp-route-id="@employee.Id">
                             <i class="fas fa-eye"></i> Details
                         </a>
@@ -49,7 +71,7 @@
                         <a class="btn btn-success" asp-action="Edit" asp-route-id="@employee.Id">
                             <i class="fas fa-edit"></i> Edit
                         </a>
-                    </td>
+                    </td> *@
                     <td>
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@employee.Id">
                             <i class="fas fa-trash"></i> Delete

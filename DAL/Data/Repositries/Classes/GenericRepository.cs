@@ -30,11 +30,11 @@ namespace DAL.Data.Repositries.Classes
         {
             if (WithTracking)
             {
-                return dbcontext.Set<TEntity>().ToList();
+                return dbcontext.Set<TEntity>().Where(E=>E.IsDeleted!=true).ToList();
             }
             else
             {
-                return dbcontext.Set<TEntity>().AsNoTracking().ToList();
+                return dbcontext.Set<TEntity>().Where(E => E.IsDeleted != true).AsNoTracking().ToList();
             }
         }
 
