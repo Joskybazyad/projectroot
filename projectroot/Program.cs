@@ -1,4 +1,7 @@
-using BLL.Services;
+using AutoMapper;
+using BLL.Profiles;
+using BLL.Services.Classes;
+using BLL.Services.Interfaces;
 using DAL.Data;
 using DAL.Data.Repositries.Classes;
 using DAL.Data.Repositries.Interfacies;
@@ -21,6 +24,11 @@ namespace projectroot
             }); 
             builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>();
             builder.Services.AddScoped<IDepartmentService,DepartmentService>();
+            builder.Services.AddScoped<IEmployeeRepository,EmployeeRepository>();
+            //builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+            builder.Services.AddAutoMapper(M => M.AddProfile(new MappingProfiles()));
+            builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

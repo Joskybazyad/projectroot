@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL.DTO
+namespace BLL.DTO.DepartmentDto
 {
     public class DepartmentDetailsDto
     {
-        
+
         //public DepartmentDetailsDto(Department department)
         //{
         //    ID = department.ID;

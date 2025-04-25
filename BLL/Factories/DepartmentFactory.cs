@@ -1,4 +1,4 @@
-﻿using BLL.DTO;
+﻿using BLL.DTO.DepartmentDto;
 using DAL.Models;
 using System;
 using System.Collections.Generic;

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BLL.DTO
+namespace BLL.DTO.DepartmentDto
 {
     public class DepartmentDto
     {
@@ -13,7 +13,7 @@ namespace BLL.DTO
         public string Name { get; set; }
         public string Code { get; set; }
         public string? Description { get; set; }
-        [Display(Name ="Date Of Creation")]
+        [Display(Name = "Date Of Creation")]
         public DateOnly? DateOfCreation { get; set; }
     }
 }

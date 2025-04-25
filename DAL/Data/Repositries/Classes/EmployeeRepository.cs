@@ -1,5 +1,6 @@
 ﻿using DAL.Data.Repositries.Interfacies;
 using DAL.Models;
+using DAL.Models.EmployeeModel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,9 +10,8 @@ using System.Threading.Tasks;
 
 namespace DAL.Data.Repositries.Classes
 {
-    // Primary Constructor
-    public class DepartmentRepository(AppDBContext _dbcontext) :GenericRepository<Department>(_dbcontext) ,IDepartmentRepository
+    public class EmployeeRepository(AppDBContext _dbcontext) :GenericRepository<Employee>(_dbcontext), IEmployeeRepository
     {
-       
+        
     }
 }

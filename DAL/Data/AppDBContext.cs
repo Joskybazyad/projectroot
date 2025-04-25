@@ -1,5 +1,6 @@
 ﻿using DAL.Data.Configrations;
 using DAL.Models;
+using DAL.Models.EmployeeModel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -26,5 +27,6 @@ namespace DAL.Data
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
         public DbSet<Department> Departments { get; set; }
+        public DbSet<Employee> Employees { get; set; }
     }
 }
