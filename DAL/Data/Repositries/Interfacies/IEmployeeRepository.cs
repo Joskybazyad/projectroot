@@ -10,6 +10,6 @@ namespace DAL.Data.Repositries.Interfacies
 {
     public interface IEmployeeRepository:IGenericRepository<Employee>
     {
-       
+       IEnumerable<Employee> GetEmployeeByName(string name);
     }
 }

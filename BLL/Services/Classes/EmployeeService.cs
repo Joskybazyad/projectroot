@@ -11,28 +11,49 @@ using System.Threading.Tasks;
 
 namespace BLL.Services.Classes
 {
-    public class EmployeeService(IEmployeeRepository _employeeRepository, IMapper _mapper) : IEmployeeService
+    public class EmployeeService(IUnitOfWork _unitOfWork, IMapper _mapper) : IEmployeeService
     {
         public int CreateEmployee(CreatedEmployeeDto employee)
         {
             var Employee = _mapper.Map<CreatedEmployeeDto, Employee>(employee);
-            return _employeeRepository.Add(Employee);
+           _unitOfWork.EmployeeRepository.Add(Employee);
+            return _unitOfWork.SaveChanges();
         }
 
         public bool DeleteEmployee(int id)
         {
-            var employee = _employeeRepository.GetById(id);
+            var employee = _unitOfWork.EmployeeRepository.GetById(id);
             if (employee == null) return false;
             else
             {
                 employee.IsDeleted = true;
-                return _employeeRepository.Update(employee)>0?true:false;
+                _unitOfWork.EmployeeRepository.Update(employee);
+                return _unitOfWork.SaveChanges()>0?true:false;
             }
         }
+        public IEnumerable<EmployeeDto> SearchEmployeeByName(string name)
+        {
+            var Employees= _unitOfWork.EmployeeRepository.GetEmployeeByName(name.ToLower());
+            //var returnedEmployees = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeDto>>(Employees);
+            var returnedEmployees = Employees.Select(emp => new EmployeeDto()
+            {
+                Id = emp.ID,
+                Name = emp.Name,
+                Age = emp.Age,
+                Email = emp.Email,
+                Salary = emp.Salary,
+                IsActive = emp.IsActive,
+                EmployeeType = emp.EmployeeType.ToString(),
+                Gender = emp.Gender.ToString(),
+            });
 
+            return returnedEmployees;
+
+
+        }
         public IEnumerable<EmployeeDto> GetAllEmployees(bool withTracking)
         {
-            var Employees = _employeeRepository.GetAll(withTracking);
+            var Employees = _unitOfWork.EmployeeRepository.GetAll(withTracking);
             var returnedEmployees=_mapper.Map<IEnumerable<Employee>,IEnumerable<EmployeeDto>>(Employees);//AutoMapper
             //var returnedEmployees = Employees.Select(emp => new EmployeeDto()
             //{
@@ -50,7 +71,7 @@ namespace BLL.Services.Classes
 
         public EmployeeDetailsDto? GetEmployeeById(int id)
         {
-            var Employee = _employeeRepository.GetById(id);
+            var Employee = _unitOfWork.EmployeeRepository.GetById(id);
             //if(Employee == null)return null;
             //else
             //{
@@ -78,7 +99,8 @@ namespace BLL.Services.Classes
 
         public int UpdateEmployee(UpdatedEmployeeDto employee)
         {
-            return _employeeRepository.Update(_mapper.Map<UpdatedEmployeeDto,Employee>(employee));
+             _unitOfWork.EmployeeRepository.Update(_mapper.Map<UpdatedEmployeeDto,Employee>(employee));
+            return _unitOfWork.SaveChanges();
         }
     }
 }

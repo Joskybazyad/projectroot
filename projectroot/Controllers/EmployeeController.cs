@@ -9,24 +9,38 @@ using projectroot.ViewModels.Employee;
 
 namespace projectroot.Controllers
 {
-    public class EmployeeController(IEmployeeService _employeeService, ILogger<EmployeeController> _logger, IWebHostEnvironment _environment) : Controller
+    public class EmployeeController(IEmployeeService _employeeService, ILogger<EmployeeController> _logger, IWebHostEnvironment _environment,IDepartmentService departmentService) : Controller
     {
-        public IActionResult Index()
+        public IActionResult Index(string? EmployeeSearchName)
         {
-            TempData.Keep();
-            var Employees = _employeeService.GetAllEmployees();
+            //TempData.Keep();
+
             // Binding through view's dictionary : transfeare Data From Action To View
-            //1- ViewData
-            ViewData["Massage"] = "Hello ViewData";
-            string msg01 = ViewData["Message"]as string;
-            //2- ViewBag
-            ViewBag.Massage = "Hello ViewBag";
-            string msg02=ViewBag.Massage;
+            ////1- ViewData
+            //ViewData["Massage"] = "Hello ViewData";
+            //string msg01 = ViewData["Message"]as string;
+            ////2- ViewBag
+            //ViewBag.Massage = "Hello ViewBag";
+            //string msg02=ViewBag.Massage;
+            dynamic Employees = null;
+            if (string.IsNullOrEmpty(EmployeeSearchName))
+            {
+               Employees = _employeeService.GetAllEmployees();
+            }
+            else
+            {
+                Employees = _employeeService.SearchEmployeeByName(EmployeeSearchName);
+
+            }
             return View(Employees);
         }
         #region Create Employee
         [HttpGet]
-        public IActionResult Create() => View();
+        public IActionResult Create(/*[FromServices]IDepartmentService _departmentService*/) 
+        {
+            //ViewData["AllDepartments"] =_departmentService.GetAllDepartments();
+            return View();
+        }
         [HttpPost]
         public IActionResult Create(EmployeeViewModel employeeDto)
         {
@@ -45,7 +59,8 @@ namespace projectroot.Controllers
                         PhoneNumber = employeeDto.PhoneNumber,
                         EmployeeType = employeeDto.EmployeeType,
                         Gender = employeeDto.Gender,
-                        HiringDate = employeeDto.HiringDate
+                        HiringDate = employeeDto.HiringDate,
+                        DepartmentId= employeeDto.DepartmentId
                     };
                     int result = _employeeService.CreateEmployee(employeeCreatedDto);
                     //3- TempData
@@ -91,7 +106,7 @@ namespace projectroot.Controllers
         #endregion
         #region Employee Edit
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public IActionResult Edit(int? id/*,[FromServices]IDepartmentService _departmentService*/)
         {
             if (!id.HasValue) return BadRequest();
             var employee = _employeeService.GetEmployeeById(id.Value);
@@ -109,6 +124,7 @@ namespace projectroot.Controllers
                 Gender=Enum.Parse<Gender>(employee.Gender),
                 EmployeeType=Enum.Parse<EmployeeType>(employee.EmployeeType),
             };
+            //ViewData["AllDepartments"] = _departmentService.GetAllDepartments();
             return View(employeeDto);
         }
         [ValidateAntiForgeryToken]
@@ -130,7 +146,8 @@ namespace projectroot.Controllers
                     PhoneNumber = viewModel.PhoneNumber,
                     EmployeeType = viewModel.EmployeeType,
                     Gender = viewModel.Gender,
-                    HiringDate = viewModel.HiringDate
+                    HiringDate = viewModel.HiringDate,
+                    DepartmentId=viewModel.DepartmentId
                 };
                 int result = _employeeService.UpdateEmployee(employeeUpdatedDto);
                 if (result > 0) return RedirectToAction(nameof(Index));

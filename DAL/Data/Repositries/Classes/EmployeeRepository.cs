@@ -10,8 +10,11 @@ using System.Threading.Tasks;
 
 namespace DAL.Data.Repositries.Classes
 {
-    public class EmployeeRepository(AppDBContext _dbcontext) :GenericRepository<Employee>(_dbcontext), IEmployeeRepository
+    public class EmployeeRepository(AppDBContext _dbcontext) : GenericRepository<Employee>(_dbcontext), IEmployeeRepository
     {
-        
+        public IEnumerable<Employee> GetEmployeeByName(string name)
+        {
+            return _dbcontext.Employees.Where(emp => emp.Name.ToLower().Contains(name));
+        }
     }
 }

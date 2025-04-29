@@ -16,6 +16,8 @@ namespace DAL.Data.Configrations
             builder.Property(D => D.ID).UseIdentityColumn(10,10);
             builder.Property(D => D.Name).HasColumnType("varchar(20)");
             builder.Property(D => D.Code).HasColumnType("varchar(20)");
+            builder.HasMany(d => d.Employees)
+                .WithOne(e=>e.Department).OnDelete(DeleteBehavior.Cascade);
             base.Configure(builder);
 
 

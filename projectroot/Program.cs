@@ -21,6 +21,7 @@ namespace projectroot
             builder.Services.AddDbContext<AppDBContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+                options.UseLazyLoadingProxies();
             }); 
             builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>();
             builder.Services.AddScoped<IDepartmentService,DepartmentService>();
@@ -28,6 +29,7 @@ namespace projectroot
             //builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
             builder.Services.AddAutoMapper(M => M.AddProfile(new MappingProfiles()));
             builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             var app = builder.Build();
 

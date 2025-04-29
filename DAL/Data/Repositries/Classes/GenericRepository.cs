@@ -13,17 +13,17 @@ namespace DAL.Data.Repositries.Classes
     {
         private readonly AppDBContext dbcontext = _dbcontext;
 
-        public int Add(TEntity Entity)
+        public void Add(TEntity Entity)
         {
             dbcontext.Set<TEntity>().Add(Entity);
             //dbcontext.Add(Entity);
-            return dbcontext.SaveChanges();
+            //return dbcontext.SaveChanges();
         }
 
-        public int Delete(TEntity Entity)
+        public void Delete(TEntity Entity)
         {
             dbcontext.Set<TEntity>().Remove(Entity);
-            return dbcontext.SaveChanges();
+            //return dbcontext.SaveChanges();
         }
 
         public IEnumerable<TEntity> GetAll(bool WithTracking = false)
@@ -43,10 +43,10 @@ namespace DAL.Data.Repositries.Classes
             return dbcontext.Set<TEntity>().Find(id);
         }
 
-        public int Update(TEntity Entity)
+        public void Update(TEntity Entity)
         {
             dbcontext.Set<TEntity>().Update(Entity);
-            return dbcontext.SaveChanges();
+            //return dbcontext.SaveChanges();
         }
     }
 }
