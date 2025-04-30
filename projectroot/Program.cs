@@ -1,10 +1,13 @@
 using AutoMapper;
 using BLL.Profiles;
+using BLL.Services.AttachmentService;
 using BLL.Services.Classes;
 using BLL.Services.Interfaces;
 using DAL.Data;
 using DAL.Data.Repositries.Classes;
 using DAL.Data.Repositries.Interfacies;
+using DAL.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace projectroot
@@ -30,6 +33,16 @@ namespace projectroot
             builder.Services.AddAutoMapper(M => M.AddProfile(new MappingProfiles()));
             builder.Services.AddScoped<IEmployeeService, EmployeeService>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IAttachmentService, AttachmentService>();
+            //builder.Services.AddScoped<UserManager<ApplicationUser>>();
+            //builder.Services.AddScoped<SignInManager<ApplicationUser>>();
+            //builder.Services.AddScoped<RoleManager<IdentityRole>>();
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options=>
+                {
+                    //options.User.RequireUniqueEmail = true;
+                    //options.Password.RequireUppercase = true;
+                    //options.Password.RequireLowercase = true;
+            }).AddEntityFrameworkStores<AppDBContext>();
 
             var app = builder.Build();
 
@@ -50,7 +63,7 @@ namespace projectroot
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Account}/{action=Register}/{id?}");
 
             app.Run();
         }

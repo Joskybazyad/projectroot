@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BLL.DTO.EmployeeDto;
+using BLL.Services.AttachmentService;
 using BLL.Services.Interfaces;
 using DAL.Data.Repositries.Interfacies;
 using DAL.Models.EmployeeModel;
@@ -8,14 +9,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+//using Microsoft.AspNetCore.Http.Internal; // For HeaderDictionary (in older ASP.NET Core versions)
+using System.IO;
+using BLL.Profiles;
+
 
 namespace BLL.Services.Classes
 {
-    public class EmployeeService(IUnitOfWork _unitOfWork, IMapper _mapper) : IEmployeeService
+    public class EmployeeService(IUnitOfWork _unitOfWork, IMapper _mapper,IAttachmentService _attachmentService) : IEmployeeService
     {
-        public int CreateEmployee(CreatedEmployeeDto employee)
+        public int CreateEmployee(CreatedEmployeeDto employeeDto)
         {
-            var Employee = _mapper.Map<CreatedEmployeeDto, Employee>(employee);
+            var Employee = _mapper.Map<CreatedEmployeeDto, Employee>(employeeDto);
+            if (employeeDto.Image is not null) 
+            { 
+                Employee.ImageName=_attachmentService.Upload(employeeDto.Image,"Images");
+            }
            _unitOfWork.EmployeeRepository.Add(Employee);
             return _unitOfWork.SaveChanges();
         }
@@ -27,8 +37,17 @@ namespace BLL.Services.Classes
             else
             {
                 employee.IsDeleted = true;
+                var imgInfo = employee.ImageName;
+                employee.ImageName = null;
                 _unitOfWork.EmployeeRepository.Update(employee);
-                return _unitOfWork.SaveChanges()>0?true:false;
+                var result = _unitOfWork.SaveChanges();
+                if (result > 0)
+                {
+                    _attachmentService.Delete(imgInfo, "Images");
+                    return true;
+                }
+                else
+                    return false;
             }
         }
         public IEnumerable<EmployeeDto> SearchEmployeeByName(string name)
@@ -72,7 +91,7 @@ namespace BLL.Services.Classes
         public EmployeeDetailsDto? GetEmployeeById(int id)
         {
             var Employee = _unitOfWork.EmployeeRepository.GetById(id);
-            //if(Employee == null)return null;
+            //if (Employee == null) return null;
             //else
             //{
             //    var returnedEmp = new EmployeeDetailsDto()
@@ -89,17 +108,43 @@ namespace BLL.Services.Classes
             //        HiringDate = DateOnly.FromDateTime(Employee.HiringDate),
             //        //CreatedOn = Employee.CreatedOn.Value,
             //        CreatedBy = Employee.CreatedBy,
-            //        LastModifiedBy=Employee.LastModifiedBy,
+            //        LastModifiedBy = Employee.LastModifiedBy,
+
 
             //    };
             //    return returnedEmp;
             //}
-            return Employee == null ? null : _mapper.Map<Employee,EmployeeDetailsDto>(Employee);
+            return Employee == null ? null : _mapper.Map<Employee, EmployeeDetailsDto>(Employee);
+            
         }
 
         public int UpdateEmployee(UpdatedEmployeeDto employee)
         {
-             _unitOfWork.EmployeeRepository.Update(_mapper.Map<UpdatedEmployeeDto,Employee>(employee));
+            // _unitOfWork.EmployeeRepository.Update(_mapper.Map<UpdatedEmployeeDto,Employee>(employee));
+            //return _unitOfWork.SaveChanges();
+            var currentEmp = _unitOfWork.EmployeeRepository.GetById(employee.Id);
+            if (employee.Image is not null)
+            {
+                
+                if (currentEmp.ImageName is not null)
+                {
+                    
+                    _attachmentService.Delete(currentEmp.ImageName, "Images");
+                    currentEmp.ImageName = _attachmentService.Upload(employee.Image, "Images");
+                    
+                }
+                else
+                {
+                    currentEmp.ImageName = _attachmentService.Upload(employee.Image, "Images");
+                }
+
+
+            }
+            else
+            {
+                _attachmentService.Delete(currentEmp.ImageName, "Images");
+            }
+            _unitOfWork.EmployeeRepository.Update(currentEmp);
             return _unitOfWork.SaveChanges();
         }
     }

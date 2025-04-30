@@ -60,7 +60,8 @@ namespace projectroot.Controllers
                         EmployeeType = employeeDto.EmployeeType,
                         Gender = employeeDto.Gender,
                         HiringDate = employeeDto.HiringDate,
-                        DepartmentId= employeeDto.DepartmentId
+                        DepartmentId= employeeDto.DepartmentId,
+                        Image=employeeDto.Image
                     };
                     int result = _employeeService.CreateEmployee(employeeCreatedDto);
                     //3- TempData
@@ -123,6 +124,7 @@ namespace projectroot.Controllers
                 HiringDate=employee.HiringDate,
                 Gender=Enum.Parse<Gender>(employee.Gender),
                 EmployeeType=Enum.Parse<EmployeeType>(employee.EmployeeType),
+                //Image=employee.ImageName
             };
             //ViewData["AllDepartments"] = _departmentService.GetAllDepartments();
             return View(employeeDto);
@@ -147,7 +149,8 @@ namespace projectroot.Controllers
                     EmployeeType = viewModel.EmployeeType,
                     Gender = viewModel.Gender,
                     HiringDate = viewModel.HiringDate,
-                    DepartmentId=viewModel.DepartmentId
+                    DepartmentId=viewModel.DepartmentId,
+                    Image=viewModel.Image
                 };
                 int result = _employeeService.UpdateEmployee(employeeUpdatedDto);
                 if (result > 0) return RedirectToAction(nameof(Index));

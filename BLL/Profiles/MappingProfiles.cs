@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace BLL.Profiles
 {
@@ -25,4 +27,5 @@ namespace BLL.Profiles
             CreateMap<UpdatedEmployeeDto, Employee>().ForMember(dest => dest.HiringDate, options => options.MapFrom(src => src.HiringDate.ToDateTime(TimeOnly.MinValue)));
         }
     }
+
 }
