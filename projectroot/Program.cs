@@ -42,7 +42,7 @@ namespace projectroot
                     //options.User.RequireUniqueEmail = true;
                     //options.Password.RequireUppercase = true;
                     //options.Password.RequireLowercase = true;
-            }).AddEntityFrameworkStores<AppDBContext>();
+            }).AddEntityFrameworkStores<AppDBContext>().AddDefaultTokenProviders();
 
             var app = builder.Build();
 
@@ -58,7 +58,7 @@ namespace projectroot
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
